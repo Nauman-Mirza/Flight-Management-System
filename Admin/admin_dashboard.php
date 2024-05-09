@@ -29,7 +29,7 @@ $surname = $_SESSION['surname'];
         <input type="submit" value="Logout">
     </form>
     <h3>Airplace Feature : </h3>
-    <form action="all_plane_listing.php" method="post">
+    <form action="AirPlane/all_plane_listing.php" method="post">
         <input type="submit" value="View All Planes">
     </form>
 </body>

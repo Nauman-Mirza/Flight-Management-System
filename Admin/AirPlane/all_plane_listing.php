@@ -53,7 +53,7 @@ $conn->close();
     </style>
 </head>
 <body>
-    <form action="admin_dashboard.php" method="post">
+    <form action="../admin_dashboard.php" method="post">
         <input type="submit" value="Back">
     </form>
     <form action="add_plane.php" method="post">
