@@ -5,7 +5,7 @@ session_start();
 // Check if user is logged in
 if (!isset($_SESSION['email'])) {
     // Redirect to login page if session is not set
-    header("Location: login.html");
+    header("Location: admin_login.html");
     exit();
 }
 
@@ -27,6 +27,10 @@ $surname = $_SESSION['surname'];
     <h2>Welcome Admin <?php echo $name . ' ' . $surname; ?></h2>
     <form action="logout.php" method="post">
         <input type="submit" value="Logout">
+    </form>
+    <h3>Airplace Feature : </h3>
+    <form action="all_plane_listing.php" method="post">
+        <input type="submit" value="View All Planes">
     </form>
 </body>
 </html>
