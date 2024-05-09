@@ -34,12 +34,12 @@ if ($conn->connect_error) {
 $id = $_GET['id'];
 
 // Delete plane record from the database
-$sql_delete = "DELETE FROM air_planes WHERE ID = $id";
+$sql_delete = "DELETE FROM staffs WHERE ID = $id";
 
 if ($conn->query($sql_delete) === TRUE) {
-    header("Location: all_plane_listing.php");
+    header("Location: all_staff_listing.php");
 } else {
-    echo "Error deleting plane: " . $conn->error;
+    echo "Error deleting staff: " . $conn->error;
 }
 
 // Close connection

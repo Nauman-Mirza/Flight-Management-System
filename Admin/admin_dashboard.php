@@ -32,5 +32,9 @@ $surname = $_SESSION['surname'];
     <form action="AirPlane/all_plane_listing.php" method="post">
         <input type="submit" value="View All Planes">
     </form>
+    <h3>Staff Feature : </h3>
+    <form action="Staff/all_staff_listing.php" method="post">
+        <input type="submit" value="View All Staff">
+    </form>
 </body>
 </html>

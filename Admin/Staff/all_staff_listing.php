@@ -23,8 +23,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch all planes from the air_planes table
-$sql = "SELECT * FROM air_planes";
+// Fetch all staff members from the staffs table
+$sql = "SELECT * FROM staffs";
 $result = $conn->query($sql);
 
 // Close connection
@@ -36,7 +36,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Planes Listing</title>
+    <title>All Staff Listing</title>
     <style>
         table {
             width: 100%;
@@ -56,22 +56,26 @@ $conn->close();
     <form action="../admin_dashboard.php" method="post">
         <input type="submit" value="Back">
     </form>
-    <form action="add_plane.php" method="post">
-        <input type="submit" value="Add Plane">
+    <form action="add_staff.php" method="post">
+        <input type="submit" value="Add Staff">
     </form>
-    <form action="booked_plane_listing.php" method="post">
-        <input type="submit" value="View Booked Plane">
+    <form action="booked_staff_listing.php" method="post">
+        <input type="submit" value="View Booked Staff">
     </form>
-    <form action="available_plane_listing.php" method="post">
-        <input type="submit" value="Available Booked Plane">
+    <form action="available_staff_listing.php" method="post">
+        <input type="submit" value="View Available Staff">
     </form>
-    <h2>All Planes Listing</h2>
+    <h2>All Staff Listing</h2>
     <table>
         <thead>
             <tr>
-                <th>Serial Number</th>
-                <th>Manufacture</th>
-                <th>Model</th>
+                <th>Employee Number</th>
+                <th>Surname</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Phone Number</th>
+                <th>Salary</th>
+                <th>Designation</th>
                 <th>Status</th>
                 <th>Action</th>
             </tr>
@@ -81,15 +85,19 @@ $conn->close();
             if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()) {
                     echo "<tr>";
-                    echo "<td>" . $row['SerNum'] . "</td>";
-                    echo "<td>" . $row['Manufacture'] . "</td>";
-                    echo "<td>" . $row['Model'] . "</td>";
+                    echo "<td>" . $row['EmpNum'] . "</td>";
+                    echo "<td>" . $row['SurName'] . "</td>";
+                    echo "<td>" . $row['Name'] . "</td>";
+                    echo "<td>" . $row['Address'] . "</td>";
+                    echo "<td>" . $row['PhoneNumber'] . "</td>";
+                    echo "<td>" . $row['Salary'] . "</td>";
+                    echo "<td>" . $row['Designation'] . "</td>";
                     echo "<td>" . ($row['Booked'] ? "Booked" : "Available") . "</td>";
-                    echo "<td><a href='edit_plane.php?id=" . $row['ID'] . "'>Edit</a> | <a href='delete_plane.php?id=" . $row['ID'] . "'>Delete</a></td>";
+                    echo "<td><a href='update_staff.php?id=" . $row['ID'] . "'>Update</a> | <a href='delete_staff.php?id=" . $row['ID'] . "'>Delete</a></td>";
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='5'>No planes found</td></tr>";
+                echo "<tr><td colspan='9'>No staff members found</td></tr>";
             }
             ?>
         </tbody>

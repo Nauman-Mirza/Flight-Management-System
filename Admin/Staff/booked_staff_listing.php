@@ -23,8 +23,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch available planes from the air_planes table
-$sql = "SELECT * FROM air_planes WHERE Booked = 0";
+// Fetch booked staff members from the staffs table
+$sql = "SELECT * FROM staffs WHERE Booked = 1";
 $result = $conn->query($sql);
 
 // Close connection
@@ -36,7 +36,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Available Plane Listing</title>
+    <title>Booked Staff Listing</title>
     <style>
         table {
             width: 100%;
@@ -53,16 +53,21 @@ $conn->close();
     </style>
 </head>
 <body>
-    <form action="all_plane_listing.php" method="post">
+    <form action="all_staff_listing.php" method="post">
         <input type="submit" value="Back">
     </form>
-    <h2>Available Plane Listing</h2>
+
+    <h2>Booked Staff Listing</h2>
     <table>
         <thead>
             <tr>
-                <th>Serial Number</th>
-                <th>Manufacture</th>
-                <th>Model</th>
+                <th>Employee Number</th>
+                <th>Surname</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Phone Number</th>
+                <th>Salary</th>
+                <th>Designation</th>
             </tr>
         </thead>
         <tbody>
@@ -70,13 +75,17 @@ $conn->close();
             if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()) {
                     echo "<tr>";
-                    echo "<td>" . $row['SerNum'] . "</td>";
-                    echo "<td>" . $row['Manufacture'] . "</td>";
-                    echo "<td>" . $row['Model'] . "</td>";
+                    echo "<td>" . $row['EmpNum'] . "</td>";
+                    echo "<td>" . $row['SurName'] . "</td>";
+                    echo "<td>" . $row['Name'] . "</td>";
+                    echo "<td>" . $row['Address'] . "</td>";
+                    echo "<td>" . $row['PhoneNumber'] . "</td>";
+                    echo "<td>" . $row['Salary'] . "</td>";
+                    echo "<td>" . $row['Designation'] . "</td>";
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='3'>No available planes found</td></tr>";
+                echo "<tr><td colspan='7'>No booked staff members found</td></tr>";
             }
             ?>
         </tbody>
