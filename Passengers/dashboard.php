@@ -25,5 +25,8 @@ $surname = $_SESSION['surname'];
 </head>
 <body>
     <h2>Welcome <?php echo $name . ' ' . $surname; ?></h2>
+    <form action="logout.php" method="post">
+        <input type="submit" value="Logout">
+    </form>
 </body>
 </html>
