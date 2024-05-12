@@ -1,3 +1,4 @@
+
 <?php
 // Start session
 session_start();
@@ -28,7 +29,7 @@ $surname = $_SESSION['surname'];
         <input type="submit" value="Back">
     </form>
     <h2>Add Staff Member</h2>
-    <form action="store_staff.php" method="post">
+    <form action="store_staff.php" method="post" id="staffForm">
         <label for="emp_num">Employee Number:</label><br>
         <input type="text" id="emp_num" name="emp_num" required><br>
         
@@ -45,12 +46,40 @@ $surname = $_SESSION['surname'];
         <input type="text" id="phone" name="phone" required><br>
 
         <label for="designation">Designation:</label><br>
-        <input type="text" id="designation" name="designation" required><br>
+        <select id="designation" name="designation" required onchange="showAdditionalDropdown()">
+            <option value="Crew Member">Crew Member</option>
+            <option value="Pilot">Pilot</option>
+        </select><br>
+        
+        <div id="pilotDropdown" style="display:none;">
+            <label for="rating">Pilot Rating:</label><br>
+            <select id="rating" name="rating">
+                <option value="N/A">N/A</option>
+                <option value="1">Level 1</option>
+                <option value="2">Level 2</option>
+                <option value="3">Level 3</option>
+                <option value="4">Level 4</option>
+                <option value="5">Level 5</option>
+            </select><br>
+        </div>
         
         <label for="salary">Salary:</label><br>
         <input type="text" id="salary" name="salary" required><br><br>
         
         <input type="submit" value="Add Staff Member">
     </form>
+
+    <script>
+        function showAdditionalDropdown() {
+            var designation = document.getElementById("designation").value;
+            var pilotDropdown = document.getElementById("pilotDropdown");
+
+            if (designation === "Pilot") {
+                pilotDropdown.style.display = "block";
+            } else {
+                pilotDropdown.style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>

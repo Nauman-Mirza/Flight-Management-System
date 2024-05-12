@@ -76,6 +76,7 @@ $conn->close();
                 <th>Phone Number</th>
                 <th>Salary</th>
                 <th>Designation</th>
+                <th>Rating</th>
                 <th>Status</th>
                 <th>Action</th>
             </tr>
@@ -92,6 +93,7 @@ $conn->close();
                     echo "<td>" . $row['PhoneNumber'] . "</td>";
                     echo "<td>" . $row['Salary'] . "</td>";
                     echo "<td>" . $row['Designation'] . "</td>";
+                    echo "<td>" . generateStars($row['rating']) . "</td>";
                     echo "<td>" . ($row['Booked'] ? "Booked" : "Available") . "</td>";
                     echo "<td><a href='update_staff.php?id=" . $row['ID'] . "'>Update</a> | <a href='delete_staff.php?id=" . $row['ID'] . "'>Delete</a></td>";
                     echo "</tr>";
@@ -99,6 +101,20 @@ $conn->close();
             } else {
                 echo "<tr><td colspan='9'>No staff members found</td></tr>";
             }
+            function generateStars($rating) {
+    // Check if the input is a number
+    if (is_numeric($rating)) {
+        // Generate stars based on the rating value
+        $stars = "";
+        for ($i = 0; $i < $rating; $i++) {
+            $stars .= "★"; // Add a star symbol
+        }
+        return $stars;
+    } else {
+        return "N/A"; // Return "N/A" if the input is not a number
+    }
+}
+            
             ?>
         </tbody>
     </table>

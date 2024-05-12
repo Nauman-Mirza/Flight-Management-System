@@ -32,6 +32,13 @@ $phone = $_POST['phone'];
 $salary = $_POST['salary'];
 $designation = $_POST['designation'];
 
+// Set default rating
+if ($designation === 'Pilot') {
+    $rating = $_POST['rating']; // Use the selected rating value for Pilots
+} else {
+    $rating = 'N/A'; // Set rating to "N/A" for Crew Members
+}
+
 // Check if EmpNum already exists
 $check_sql = "SELECT * FROM staffs WHERE EmpNum = '$emp_num'";
 $check_result = $conn->query($check_sql);
@@ -40,8 +47,8 @@ if ($check_result->num_rows > 0) {
     echo "Error: Employee number already exists.";
 } else {
     // Prepare SQL statement
-    $sql = "INSERT INTO staffs (EmpNum, SurName, Name, Address, PhoneNumber, Salary, Designation, Booked) 
-            VALUES ('$emp_num', '$surname', '$name', '$address', '$phone', '$salary', '$designation', false)";
+    $sql = "INSERT INTO staffs (EmpNum, SurName, Name, Address, PhoneNumber, Salary, Designation, Rating, Booked) 
+            VALUES ('$emp_num', '$surname', '$name', '$address', '$phone', '$salary', '$designation', '$rating', false)";
 
     // Execute SQL statement
     if ($conn->query($sql) === TRUE) {
