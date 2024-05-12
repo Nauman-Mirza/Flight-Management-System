@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Flight</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
     <h2>Add Flight</h2>
@@ -25,9 +26,9 @@
         
         <label for="dep_time">Departure Time:</label><br>
         <input type="time" id="dep_time" name="dep_time" required><br>
-        
+
         <label for="plane">Select Plane:</label><br>
-        <select id="plane" name="plane" required onchange="showPilots()">
+        <select id="plane" name="plane" required>
             <?php
             $servername = "localhost";
             $username = "root";
@@ -43,13 +44,14 @@
             }
 
             // Retrieve available planes
-            $sql_planes = "SELECT SerNum FROM air_planes WHERE Booked = 0";
+            $sql_planes = "SELECT SerNum, Rating FROM air_planes WHERE Booked = 0";
             $result_planes = $conn->query($sql_planes);
 
             if ($result_planes->num_rows > 0) {
                 // Output data of each row
+                echo "<option value=''>Select</option>";
                 while ($row_plane = $result_planes->fetch_assoc()) {
-                    echo "<option value='" . $row_plane['SerNum'] . "'>" . $row_plane['SerNum'] . "</option>";
+                    echo "<option value='" . $row_plane['SerNum'] . "' data-rating='" . $row_plane['Rating'] . "'>" . $row_plane['SerNum'] . "</option>";
                 }
             } else {
                 echo "<option value=''>No available planes</option>";
@@ -62,54 +64,49 @@
 
         <div id="pilotsDiv" style="display: none;">
             <label for="pilot">Select Pilot:</label><br>
-            <select id="pilot" name="pilot" required>
-                <?php
-                $servername = "localhost";
-                $username = "root";
-                $password = "";
-                $dbname = "flight_management_system";
-
-                // Database connection
-                $conn = new mysqli($servername, $username, $password, $dbname);
-
-                // Check connection
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
-
-                // Retrieve available pilots
-                $sql_pilots = "SELECT EmpNum, Name, Surname FROM staffs WHERE Designation = 'Pilot' AND Booked = 0";
-                $result_pilots = $conn->query($sql_pilots);
-
-                if ($result_pilots->num_rows > 0) {
-                    // Output data of each row
-                    while ($row_pilot = $result_pilots->fetch_assoc()) {
-                        echo "<option value='" . $row_pilot['EmpNum'] . "'>" . $row_pilot['Name'] . " " . $row_pilot['Surname'] . "</option>";
-                    }
-                } else {
-                    echo "<option value=''>No available pilots</option>";
-                }
-
-                // Close connection
-                $conn->close();
-                ?>
-            </select><br><br>
+            <select id="pilot" name="pilot" required></select><br><br>
         </div>
 
         <input type="submit" value="Add Flight">
     </form>
 
     <script>
-        function showPilots() {
-            var planeDropdown = document.getElementById("plane");
-            var pilotsDiv = document.getElementById("pilotsDiv");
+        $(document).ready(function(){
+            $('#plane').change(function(){
+                var selectedRating = $(this).find(':selected').data('rating');
+                var pilotsDiv = $('#pilotsDiv');
+                var pilotDropdown = $('#pilot');
+                
+                pilotDropdown.empty(); // Clear previous options
+                
+                if(selectedRating === "") {
+                    pilotsDiv.hide(); // Hide the pilots dropdown if "Select" is chosen
+                    return; // Exit early if no plane is selected
+                }
 
-            if (planeDropdown.value !== "") {
-                pilotsDiv.style.display = "block";
-            } else {
-                pilotsDiv.style.display = "none";
-            }
-        }
+                $.ajax({
+                    type: 'POST',
+                    url: 'get_pilots.php',
+                    data: { rating: selectedRating },
+                    dataType: 'json',
+                    success: function(response){
+                        if(response.length > 0){
+                            $.each(response, function(index, pilot){
+                                pilotDropdown.append('<option value="' + pilot.EmpNum + '">' + pilot.Name + ' ' + pilot.Surname + '</option>');
+                            });
+                            pilotsDiv.show(); // Show the pilots dropdown
+                        } else {
+                            pilotsDiv.hide(); // Hide the pilots dropdown if no pilots available
+                            alert('No available pilots for this plane.');
+                        }
+                    },
+                    error: function(xhr, status, error){
+                        console.error(xhr.responseText);
+                        alert('Error occurred while retrieving pilots.');
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
