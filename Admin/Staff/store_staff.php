@@ -45,7 +45,7 @@ if ($check_result->num_rows > 0) {
 
     // Execute SQL statement
     if ($conn->query($sql) === TRUE) {
-        echo "New staff member added successfully.";
+        header("Location: all_staff_listing.php");
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
