@@ -59,12 +59,12 @@ $conn->close();
     <form action="add_plane.php" method="post">
         <input type="submit" value="Add Plane">
     </form>
-    <form action="booked_plane_listing.php" method="post">
+    <!-- <form action="booked_plane_listing.php" method="post">
         <input type="submit" value="View Booked Plane">
     </form>
     <form action="available_plane_listing.php" method="post">
         <input type="submit" value="Available Booked Plane">
-    </form>
+    </form> -->
     <h2>All Planes Listing</h2>
     <table>
         <thead>
@@ -72,6 +72,7 @@ $conn->close();
                 <th>Serial Number</th>
                 <th>Manufacture</th>
                 <th>Model</th>
+                <th>Rating</th>
                 <th>Status</th>
                 <th>Action</th>
             </tr>
@@ -84,12 +85,22 @@ $conn->close();
                     echo "<td>" . $row['SerNum'] . "</td>";
                     echo "<td>" . $row['Manufacture'] . "</td>";
                     echo "<td>" . $row['Model'] . "</td>";
+                    echo "<td>" . generateStars($row['Rating']) . "</td>"; // Display stars based on the rating value
                     echo "<td>" . ($row['Booked'] ? "Booked" : "Available") . "</td>";
                     echo "<td><a href='edit_plane.php?id=" . $row['ID'] . "'>Edit</a> | <a href='delete_plane.php?id=" . $row['ID'] . "'>Delete</a></td>";
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='5'>No planes found</td></tr>";
+                echo "<tr><td colspan='6'>No planes found</td></tr>";
+            }
+            
+            // Function to generate stars based on the rating value
+            function generateStars($rating) {
+                $stars = '';
+                for ($i = 0; $i < $rating; $i++) {
+                    $stars .= '★'; // Unicode star character
+                }
+                return $stars;
             }
             ?>
         </tbody>

@@ -59,12 +59,12 @@ $conn->close();
     <form action="add_staff.php" method="post">
         <input type="submit" value="Add Staff">
     </form>
-    <form action="booked_staff_listing.php" method="post">
+    <!-- <form action="booked_staff_listing.php" method="post">
         <input type="submit" value="View Booked Staff">
     </form>
     <form action="available_staff_listing.php" method="post">
         <input type="submit" value="View Available Staff">
-    </form>
+    </form> -->
     <h2>All Staff Listing</h2>
     <table>
         <thead>

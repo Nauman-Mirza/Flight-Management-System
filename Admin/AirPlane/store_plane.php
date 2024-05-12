@@ -27,6 +27,7 @@ if ($conn->connect_error) {
 $ser_num = $_POST['ser_num'];
 $manufacture = $_POST['manufacture'];
 $model = $_POST['model'];
+$rating = $_POST['rating'];
 
 // Check if the SerNum already exists
 $sql_check = "SELECT * FROM air_planes WHERE SerNum = '$ser_num'";
@@ -37,8 +38,8 @@ if ($result_check->num_rows > 0) {
     echo "Error: Serial Number already exists.";
 } else {
     // SerNum does not exist, insert the data
-    $sql_insert = "INSERT INTO air_planes (SerNum, Manufacture, Model, Booked)
-                   VALUES ('$ser_num', '$manufacture', '$model', false)";
+    $sql_insert = "INSERT INTO air_planes (SerNum, Manufacture, Model, Booked, Rating)
+    VALUES ('$ser_num', '$manufacture', '$model', false, '$rating')";
     
     if ($conn->query($sql_insert) === TRUE) {
         header("Location: all_plane_listing.php");

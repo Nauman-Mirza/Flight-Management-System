@@ -51,6 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ser_num = $_POST['ser_num'];
     $manufacture = $_POST['manufacture'];
     $model = $_POST['model'];
+    $rating = $_POST['rating'];
 
     // Check if the updated serial number already exists (excluding current plane)
     $sql_check = "SELECT * FROM air_planes WHERE SerNum = '$ser_num' AND ID != $id";
@@ -61,7 +62,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Error: Serial Number already exists for another plane.";
     } else {
         // Update plane details in the database
-        $sql_update = "UPDATE air_planes SET SerNum = '$ser_num', Manufacture = '$manufacture', Model = '$model' WHERE ID = $id";
+        $sql_update = "UPDATE air_planes SET 
+            SerNum = '$ser_num', 
+            Manufacture = '$manufacture', 
+            Model = '$model', 
+            Rating = '$rating' 
+            WHERE ID = $id";
 
         if ($conn->query($sql_update) === TRUE) {
             header("Location: all_plane_listing.php");
@@ -96,6 +102,15 @@ $conn->close();
         
         <label for="model">Model:</label><br>
         <input type="text" id="model" name="model" value="<?php echo $row_current['Model']; ?>" required><br><br>
+
+        <label for="rating">Rating:</label><br>
+        <select id="rating" name="rating">
+            <option value="1" <?php if ($row_current['Rating'] == 1) echo "selected"; ?>>1 star</option>
+            <option value="2" <?php if ($row_current['Rating'] == 2) echo "selected"; ?>>2 stars</option>
+            <option value="3" <?php if ($row_current['Rating'] == 3) echo "selected"; ?>>3 stars</option>
+            <option value="4" <?php if ($row_current['Rating'] == 4) echo "selected"; ?>>4 stars</option>
+            <option value="5" <?php if ($row_current['Rating'] == 5) echo "selected"; ?>>5 stars</option>
+        </select><br><br>
         
         <input type="submit" value="Update">
     </form>
