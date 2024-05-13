@@ -24,10 +24,11 @@ if ($conn->connect_error) {
 }
 
 // Fetch all flights from the flight table
-$sql = "SELECT * FROM flight";
+$sql = "SELECT f.*, a.SerNum AS planeSerNum, a.Model AS planeModel, s.Name AS pilotName FROM flight f
+        INNER JOIN air_planes a ON f.planeid = a.SerNum
+        INNER JOIN staffs s ON f.pilotid = s.EmpNum";
 $result = $conn->query($sql);
 
-// Function to fetch crew members for a flight
 // Function to fetch crew members for a flight
 function getCrewMembers($conn, $flightnum) {
     $crewMembers = "";
@@ -105,8 +106,8 @@ function getCrewMembers($conn, $flightnum) {
                     echo "<td>" . $row['date'] . "</td>";
                     echo "<td>" . $row['arr_time'] . "</td>";
                     echo "<td>" . $row['dep_time'] . "</td>";
-                    echo "<td>" . $row['planeid'] . "</td>";
-                    echo "<td>" . $row['pilotid'] . "</td>";
+                    echo "<td>" . $row['planeSerNum'] . " (" . $row['planeModel'] . ")" . "</td>";
+                    echo "<td>" . $row['pilotName'] . "</td>";
                     echo "<td>" . getCrewMembers($conn, $row['flightnum']) . "</td>";
                     echo "<td>" . $row['status'] . "</td>";
                     echo "<td>

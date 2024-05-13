@@ -20,6 +20,9 @@
         <label for="origin">Origin:</label><br>
         <input type="text" id="origin" name="origin" required><br>
         
+        <label for="dest">Intermediate Location:</label><br>
+        <input type="text" id="inter_loc" name="inter_loc"><br>
+
         <label for="dest">Destination:</label><br>
         <input type="text" id="dest" name="dest" required><br>
         
@@ -49,14 +52,14 @@
             }
 
             // Retrieve available planes
-            $sql_planes = "SELECT SerNum, Rating FROM air_planes WHERE Booked = 0";
+            $sql_planes = "SELECT * FROM air_planes WHERE Booked = 0";
             $result_planes = $conn->query($sql_planes);
 
             if ($result_planes->num_rows > 0) {
                 // Output data of each row
                 echo "<option value=''>Select</option>";
                 while ($row_plane = $result_planes->fetch_assoc()) {
-                    echo "<option value='" . $row_plane['SerNum'] . "' data-rating='" . $row_plane['Rating'] . "'>" . $row_plane['SerNum'] . "</option>";
+                    echo "<option value='" . $row_plane['SerNum'] . "' data-rating='" . $row_plane['Rating'] . "'>" . $row_plane['SerNum'] . " (" .$row_plane['Model'] . ")" . "</option>";
                 }
             } else {
                 echo "<option value='' disabled>No available planes</option>";
@@ -85,13 +88,13 @@
         }
 
         // Retrieve all available crew members
-        $sql_crew = "SELECT EmpNum FROM staffs WHERE Designation = 'Crew Member' AND Booked = 0";
+        $sql_crew = "SELECT * FROM staffs WHERE Designation = 'Crew Member' AND Booked = 0";
         $result_crew = $conn->query($sql_crew);
 
         if ($result_crew->num_rows > 0) {
             // Output data of each row
             while ($row_crew = $result_crew->fetch_assoc()) {
-                echo "<option value='" . $row_crew['EmpNum'] . "'>" . $row_crew['EmpNum'] . "</option>";
+                echo "<option value='" . $row_crew['EmpNum'] . "'>" . $row_crew['Name'] . "</option>";
             }
         } else {
             echo "<option value='' disabled>No available crew members</option>";
@@ -129,7 +132,7 @@
                         $('#pilot').empty();
                         if(response.length > 0){
                             $.each(response, function(index, pilot){
-                                $('#pilot').append('<option value="' + pilot.EmpNum + '">' + pilot.EmpNum + '</option>');
+                                $('#pilot').append('<option value="' + pilot.EmpNum + '">' + pilot.Name + '</option>');
                             });
                         } else {
                             $('#pilot').html('<option value="" disabled>* Pilots not found *</option>');

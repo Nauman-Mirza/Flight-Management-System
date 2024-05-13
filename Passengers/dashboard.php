@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 // Retrieve upcoming flights based on search criteria
 $currentDateTime = date('Y-m-d H:i:s');
-$sql = "SELECT * FROM flight WHERE date >= CURDATE() AND CONCAT(date, ' ', dep_time) > '$currentDateTime'";
+$sql = "SELECT * FROM flight WHERE date >= CURDATE() AND CONCAT(date, ' ', dep_time) > '$currentDateTime' AND status = 'pending'";
 if (!empty($origin)) {
     $sql .= " AND origin LIKE '%$origin%'";
 }
@@ -104,6 +104,7 @@ $conn->close();
         <tr>
             <th>Flight Number</th>
             <th>Origin</th>
+            <th>Intermediate Location</th>
             <th>Destination</th>
             <th>Date</th>
             <th>Arrival Time</th>
@@ -116,6 +117,7 @@ $conn->close();
                 echo "<tr>";
                 echo "<td>" . $row['flightnum'] . "</td>";
                 echo "<td>" . $row['origin'] . "</td>";
+                echo "<td>" . $row['Intermediate'] . "</td>";
                 echo "<td>" . $row['dest'] . "</td>";
                 echo "<td>" . $row['date'] . "</td>";
                 echo "<td>" . date("h:i A", strtotime($row['arr_time'])) . "</td>";

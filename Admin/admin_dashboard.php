@@ -31,8 +31,12 @@ if ($conn->connect_error) {
 // Get current date
 $currentDate = date("Y-m-d");
 
-// Retrieve upcoming flights
-$sql = "SELECT * FROM flight WHERE date >= '$currentDate' ORDER BY date ASC";
+// Retrieve upcoming flights with airplane details and pilot's name
+$sql = "SELECT f.*, a.SerNum AS planeSerNum, a.Model, s.Name AS pilotName FROM flight f
+        INNER JOIN air_planes a ON f.planeid = a.SerNum
+        INNER JOIN staffs s ON f.pilotid = s.EmpNum
+        WHERE f.date >= '$currentDate' AND f.status = 'pending' ORDER BY f.date ASC";
+
 $result = $conn->query($sql);
 
 // Close connection
@@ -70,10 +74,13 @@ $conn->close();
         <tr>
             <th>Flight Number</th>
             <th>Origin</th>
+            <th>Intermediate Location</th>
             <th>Destination</th>
             <th>Date</th>
             <th>Arrival Time</th>
             <th>Departure Time</th>
+            <th>Plane</th>
+            <th>Pilot</th>
         </tr>
         <?php
         if ($result->num_rows > 0) {
@@ -81,6 +88,7 @@ $conn->close();
                 echo "<tr>";
                 echo "<td>" . $row['flightnum'] . "</td>";
                 echo "<td>" . $row['origin'] . "</td>";
+                echo "<td>" . $row['Intermediate'] . "</td>";
                 echo "<td>" . $row['dest'] . "</td>";
                 echo "<td>" . $row['date'] . "</td>";
                 // Format arrival time
@@ -89,6 +97,8 @@ $conn->close();
                 // Format departure time
                 $departureTime = date("h:i a", strtotime($row['dep_time']));
                 echo "<td>" . $departureTime . "</td>";
+                echo "<td>" . $row['planeSerNum'] . " (" . $row['Model'] . ")" . "</td>";
+                echo "<td>" . $row['pilotName'] . "</td>";
                 echo "</tr>";
             }
         } else {

@@ -27,7 +27,7 @@ if ($conn->connect_error) {
 $user_id = $_SESSION['user_id'];
 
 // Retrieve bookings with pending status for the logged-in user and their flight details
-$sql = "SELECT b.id, b.flightnum, f.status, f.origin, f.dest, f.date, f.arr_time, f.dep_time FROM bookings b INNER JOIN flight f ON b.flightnum = f.flightnum WHERE b.passengerid = '$user_id' AND f.status = 'pending'";
+$sql = "SELECT b.id, b.flightnum, f.status, f.origin, f.Intermediate, f.dest, f.date, f.arr_time, f.dep_time FROM bookings b INNER JOIN flight f ON b.flightnum = f.flightnum WHERE b.passengerid = '$user_id' AND f.status = 'pending'";
 $result = $conn->query($sql);
 
 // Close connection
@@ -65,6 +65,7 @@ $conn->close();
             <th>Booking ID</th>
             <th>Flight Number</th>
             <th>Origin</th>
+            <th>Intermediate Location</th>
             <th>Destination</th>
             <th>Date</th>
             <th>Arrival Time</th>
@@ -78,6 +79,7 @@ $conn->close();
                 echo "<td>" . $row['id'] . "</td>";
                 echo "<td>" . $row['flightnum'] . "</td>";
                 echo "<td>" . $row['origin'] . "</td>";
+                echo "<td>" . $row['Intermediate'] . "</td>";
                 echo "<td>" . $row['dest'] . "</td>";
                 echo "<td>" . $row['date'] . "</td>";
                 echo "<td>" . date("h:i A", strtotime($row['arr_time'])) . "</td>";

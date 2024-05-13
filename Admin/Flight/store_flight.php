@@ -4,6 +4,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve form data
     $flightnum = $_POST['flightnum'];
     $origin = $_POST['origin'];
+    $inter = isset($_POST['inter_loc']) ? $_POST['inter_loc'] : "Not available";
     $dest = $_POST['dest'];
     $date = $_POST['date'];
     $arr_time = $_POST['arr_time'];
@@ -28,8 +29,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Prepare SQL statement to insert data into flight table
-    $sql = "INSERT INTO flight (flightnum, origin, dest, date, arr_time, dep_time, planeid, pilotid, crewmembers, status)
-            VALUES ('$flightnum', '$origin', '$dest', '$date', '$arr_time', '$dep_time', '$planeid', '$pilotid', '$crewmembers','$status')";
+    $sql = "INSERT INTO flight (flightnum, origin, Intermediate, dest, date, arr_time, dep_time, planeid, pilotid, crewmembers, status)
+            VALUES ('$flightnum', '$origin', '$inter', '$dest', '$date', '$arr_time', '$dep_time', '$planeid', '$pilotid', '$crewmembers','$status')";
 
     // Execute SQL statement
     if ($conn->query($sql) === TRUE) {
