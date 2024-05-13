@@ -7,8 +7,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
+    <form action="all_flight_listing.php" method="post">
+        <input type="submit" value="Back">
+    </form>
     <h2>Add Flight</h2>
-    <form action="add_flight.php" method="post" id="flightForm">
+    <form action="store_flight.php" method="post" id="flightForm">
         <label for="flightnum">Flight Number:</label><br>
         <input type="text" id="flightnum" name="flightnum" required><br>
         
@@ -54,7 +57,7 @@
                     echo "<option value='" . $row_plane['SerNum'] . "' data-rating='" . $row_plane['Rating'] . "'>" . $row_plane['SerNum'] . "</option>";
                 }
             } else {
-                echo "<option value=''>No available planes</option>";
+                echo "<option value='' disabled>No available planes</option>";
             }
 
             // Close connection
@@ -73,38 +76,32 @@
     <script>
         $(document).ready(function(){
             $('#plane').change(function(){
-                var selectedRating = $(this).find(':selected').data('rating');
-                var pilotsDiv = $('#pilotsDiv');
-                var pilotDropdown = $('#pilot');
-                
-                pilotDropdown.empty(); // Clear previous options
-                
-                if(selectedRating === "") {
-                    pilotsDiv.hide(); // Hide the pilots dropdown if "Select" is chosen
-                    return; // Exit early if no plane is selected
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: 'get_pilots.php',
-                    data: { rating: selectedRating },
-                    dataType: 'json',
-                    success: function(response){
-                        if(response.length > 0){
-                            $.each(response, function(index, pilot){
-                                pilotDropdown.append('<option value="' + pilot.EmpNum + '">' + pilot.Name + ' ' + pilot.Surname + '</option>');
-                            });
-                            pilotsDiv.show(); // Show the pilots dropdown
-                        } else {
-                            pilotsDiv.hide(); // Hide the pilots dropdown if no pilots available
-                            alert('No available pilots for this plane.');
+                if ($(this).val() === "") {
+                    $('#pilotsDiv').hide();
+                } else {
+                    $('#pilotsDiv').show();
+                    var selectedRating = $(this).find(':selected').data('rating');
+                    $.ajax({
+                        type: 'POST',
+                        url: 'get_pilots.php',
+                        data: { rating: selectedRating },
+                        dataType: 'json',
+                        success: function(response){
+                            $('#pilot').empty();
+                            if(response.length > 0){
+                                $.each(response, function(index, pilot){
+                                    $('#pilot').append('<option value="' + pilot.EmpNum + '">' + pilot.EmpNum + '</option>');
+                                });
+                            } else {
+                                $('#pilot').html('<option value="" disabled>* Pilots not found *</option>');
+                            }
+                        },
+                        error: function(xhr, status, error){
+                            console.error(xhr.responseText);
+                            alert('Error occurred while retrieving pilots.');
                         }
-                    },
-                    error: function(xhr, status, error){
-                        console.error(xhr.responseText);
-                        alert('Error occurred while retrieving pilots.');
-                    }
-                });
+                    });
+                }
             });
         });
     </script>

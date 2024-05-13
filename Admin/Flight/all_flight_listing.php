@@ -23,7 +23,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch all staff members from the staffs table
+// Fetch all flights from the flight table
 $sql = "SELECT * FROM flight";
 $result = $conn->query($sql);
 
@@ -87,6 +87,11 @@ $conn->close();
                     echo "<td>" . $row['dep_time'] . "</td>";
                     echo "<td>" . $row['planeid'] . "</td>";
                     echo "<td>" . $row['pilotid'] . "</td>";
+                    echo "<td>
+        <a href='update_flight.php?flightnum=" . $row['flightnum'] . "'>Edit</a> |
+        <a href='delete_flight.php?flightnum=" . $row['flightnum'] . "'>Delete</a>
+      </td>";
+
                     echo "</tr>";
                 }
             } else {
