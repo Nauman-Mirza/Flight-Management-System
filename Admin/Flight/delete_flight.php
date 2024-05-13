@@ -27,15 +27,39 @@ if (isset($_GET['flightnum'])) {
 
     $flight_id = $_GET['flightnum'];
 
-    // Delete flight record from the database
-    $sql = "DELETE FROM flight WHERE flightnum = $flight_id";
+    // Retrieve pilots, crew members, and plane ID associated with the flight
+    $sql_flight = "SELECT pilotid, crewmembers, planeid FROM flight WHERE flightnum = $flight_id";
+    $result_flight = $conn->query($sql_flight);
 
-    if ($conn->query($sql) === TRUE) {
-        // Redirect to flight listing page after successful deletion
-        header("Location: all_flight_listing.php");
-        exit();
+    if ($result_flight->num_rows > 0) {
+        $row = $result_flight->fetch_assoc();
+        $pilot_id = $row['pilotid'];
+        $crew_members = json_decode($row['crewmembers']);
+        $plane_id = $row['planeid'];
+
+        // Delete flight record from the database
+        $sql_delete_flight = "DELETE FROM flight WHERE flightnum = $flight_id";
+        if ($conn->query($sql_delete_flight) === TRUE) {
+            // Update pilots, crew members, and plane to set Booked=0
+            $sql_update_pilot = "UPDATE staffs SET Booked = 0 WHERE EmpNum = '$pilot_id'";
+            $conn->query($sql_update_pilot);
+
+            foreach ($crew_members as $crew_member_id) {
+                $sql_update_crew = "UPDATE staffs SET Booked = 0 WHERE EmpNum = '$crew_member_id'";
+                $conn->query($sql_update_crew);
+            }
+
+            $sql_update_plane = "UPDATE air_planes SET Booked = 0 WHERE SerNum = '$plane_id'";
+            $conn->query($sql_update_plane);
+
+            // Redirect to flight listing page after successful deletion
+            header("Location: all_flight_listing.php");
+            exit();
+        } else {
+            echo "Error deleting record: " . $conn->error;
+        }
     } else {
-        echo "Error deleting record: " . $conn->error;
+        echo "Flight not found.";
     }
 
     // Close connection

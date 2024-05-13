@@ -27,8 +27,26 @@ if ($conn->connect_error) {
 $sql = "SELECT * FROM flight";
 $result = $conn->query($sql);
 
-// Close connection
-$conn->close();
+// Function to fetch crew members for a flight
+// Function to fetch crew members for a flight
+function getCrewMembers($conn, $flightnum) {
+    $crewMembers = "";
+    $sql = "SELECT crewmembers FROM flight WHERE flightnum = '$flightnum'";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $crewMemberList = json_decode($row['crewmembers'], true);
+        if (!empty($crewMemberList)) {
+            $crewMembers = implode(", ", $crewMemberList);
+        } else {
+            $crewMembers = "No Crew Members";
+        }
+    } else {
+        $crewMembers = "No Crew Members";
+    }
+    return $crewMembers;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -71,6 +89,8 @@ $conn->close();
                 <th>Departure Time</th>
                 <th>Plane</th>
                 <th>Pilot</th>
+                <th>Crew Members</th>
+                <th>Status</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -87,15 +107,18 @@ $conn->close();
                     echo "<td>" . $row['dep_time'] . "</td>";
                     echo "<td>" . $row['planeid'] . "</td>";
                     echo "<td>" . $row['pilotid'] . "</td>";
+                    echo "<td>" . getCrewMembers($conn, $row['flightnum']) . "</td>";
+                    echo "<td>" . $row['status'] . "</td>";
                     echo "<td>
-        <a href='update_flight.php?flightnum=" . $row['flightnum'] . "'>Edit</a> |
-        <a href='delete_flight.php?flightnum=" . $row['flightnum'] . "'>Delete</a>
-      </td>";
+                            
+                            <a href='delete_flight.php?flightnum=" . $row['flightnum'] . "'>Delete</a> | 
+                            <a href='mark_flight.php?flightnum=" . $row['flightnum'] . "'>Finish Flight</a>
+                          </td>";
 
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='9'>No Flights found</td></tr>";
+                echo "<tr><td colspan='10'>No Flights found</td></tr>";
             }
             ?>
         </tbody>

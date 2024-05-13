@@ -10,12 +10,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dep_time = $_POST['dep_time'];
     $planeid = $_POST['plane'];
     $pilotid = $_POST['pilot'];
+    $status = 'pending';
+    $crewmembers = json_encode($_POST['crew']);
 
-    // Database connection
+    // Database connection parameters
     $servername = "localhost";
     $username = "root";
     $password = "";
     $dbname = "flight_management_system";
+
+    // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
 
     // Check connection
@@ -24,12 +28,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Prepare SQL statement to insert data into flight table
-    $sql = "INSERT INTO flight (flightnum, origin, dest, date, arr_time, dep_time, planeid, pilotid)
-            VALUES ('$flightnum', '$origin', '$dest', '$date', '$arr_time', '$dep_time', '$planeid', '$pilotid')";
+    $sql = "INSERT INTO flight (flightnum, origin, dest, date, arr_time, dep_time, planeid, pilotid, crewmembers, status)
+            VALUES ('$flightnum', '$origin', '$dest', '$date', '$arr_time', '$dep_time', '$planeid', '$pilotid', '$crewmembers','$status')";
 
     // Execute SQL statement
     if ($conn->query($sql) === TRUE) {
-         header("Location: all_flight_listing.php");
+        // Update 'Booked' status for pilot
+        $sql_update_pilot = "UPDATE staffs SET Booked = 1 WHERE EmpNum = '$pilotid'";
+        $conn->query($sql_update_pilot);
+
+        // Update 'Booked' status for crew members
+        $crew_members = json_decode($crewmembers);
+        foreach ($crew_members as $crew_member) {
+            $sql_update_crew = "UPDATE staffs SET Booked = 1 WHERE EmpNum = '$crew_member'";
+            $conn->query($sql_update_crew);
+        }
+
+        // Update 'Booked' status for the selected plane
+        $sql_update_plane = "UPDATE air_planes SET Booked = 1 WHERE SerNum = '$planeid'";
+        $conn->query($sql_update_plane);
+
+        // Redirect to the listing page
+        header("Location: all_flight_listing.php");
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
@@ -38,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 } else {
     // Redirect back to form page if accessed directly
-    echo "Error: " . $sql . "<br>" . $conn->error;
+    header("Location: add_flight.php");
     exit();
 }
 ?>

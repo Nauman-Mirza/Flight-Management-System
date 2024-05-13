@@ -41,6 +41,7 @@ if (isset($_GET['flightnum'])) {
         $dep_time = $row['dep_time'];
         $planeid = $row['planeid'];
         $pilotid = $row['pilotid'];
+        $crewmembers = json_decode($row['crewmembers']);
     } else {
         echo "Flight not found.";
         exit();
@@ -61,6 +62,8 @@ if (isset($_GET['flightnum'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Flight</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 </head>
 <body>
     <form action="all_flight_listing.php" method="post">
@@ -84,36 +87,37 @@ if (isset($_GET['flightnum'])) {
         <label for="dep_time">Departure Time:</label><br>
         <input type="time" id="dep_time" name="dep_time" value="<?php echo $dep_time; ?>" required><br>
 
-       <label for="plane">Select Plane:</label><br>
-<select id="plane" name="plane" required>
-    <?php
-    // Database connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
+        <label for="plane">Select Plane:</label><br>
+        <select id="plane" name="plane" required>
+            <?php
+            // Database connection
+            $conn = new mysqli($servername, $username, $password, $dbname);
 
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+            // Check connection
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
 
-    // Retrieve available planes
-    $sql_planes = "SELECT SerNum, Rating FROM air_planes WHERE Booked = 0";
-    $result_planes = $conn->query($sql_planes);
+            // Retrieve available planes
+            $sql_planes = "SELECT SerNum, Rating FROM air_planes WHERE Booked = 0";
+            $result_planes = $conn->query($sql_planes);
 
-    if ($result_planes->num_rows > 0) {
-        // Output data of each row
-        while ($row_plane = $result_planes->fetch_assoc()) {
-            echo "<option value='" . $row_plane['SerNum'] . "' data-rating='" . $row_plane['Rating'] . "'";
-            if ($row_plane['SerNum'] == $planeid) echo " selected";
-            echo ">" . $row_plane['SerNum'] . "</option>";
-        }
-    } else {
-        echo "<option value='' disabled>No available planes</option>";
-    }
+            if ($result_planes->num_rows > 0) {
+                // Output data of each row
+                echo "<option value=''>Select</option>";
+                while ($row_plane = $result_planes->fetch_assoc()) {
+                    echo "<option value='" . $row_plane['SerNum'] . "' data-rating='" . $row_plane['Rating'] . "'";
+                    if ($row_plane['SerNum'] == $planeid) echo " selected";
+                    echo ">" . $row_plane['SerNum'] . "</option>";
+                }
+            } else {
+                echo "<option value='' disabled>No available planes</option>";
+            }
 
-    // Close connection
-    $conn->close();
-    ?>
-</select><br>
+            // Close connection
+            $conn->close();
+            ?>
+        </select><br>
 
         <div id="pilotsDiv">
             <label for="pilot">Select Pilot:</label><br>
@@ -127,9 +131,9 @@ if (isset($_GET['flightnum'])) {
                     die("Connection failed: " . $conn->connect_error);
                 }
 
-                // Retrieve pilot details
+                // Retrieve pilot details based on selected plane's rating
                 $sql_pilots = "SELECT EmpNum FROM staffs WHERE Designation = 'Pilot' AND Booked = 0 AND Rating = 
-                (SELECT Rating FROM air_planes WHERE SerNum = '$planeid')";
+                    (SELECT Rating FROM air_planes WHERE SerNum = '$planeid')";
                 $result_pilots = $conn->query($sql_pilots);
 
                 if ($result_pilots->num_rows > 0) {
@@ -149,33 +153,91 @@ if (isset($_GET['flightnum'])) {
             </select><br><br>
         </div>
 
+        <div id="crewMembersDiv">
+            <label for="crew">Select Crew Members:</label><br>
+            <select id="crew" name="crew[]" multiple required>
+                <?php
+                // Database connection
+                $conn = new mysqli($servername, $username, $password, $dbname);
+
+                // Check connection
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+
+                // Retrieve crew members associated with the flight
+                $sql_crew_flight = "SELECT crewmembers FROM flight WHERE flightnum = '$flightnum'";
+                $result_crew_flight = $conn->query($sql_crew_flight);
+
+                // Array to store crew members associated with the flight
+                $crew_members_flight = array();
+
+                if ($result_crew_flight->num_rows > 0) {
+                    $row_crew_flight = $result_crew_flight->fetch_assoc();
+                    $crew_members_json = $row_crew_flight['crewmembers'];
+
+                    // Decode JSON array of crew members
+                    $crew_members_flight = json_decode($crew_members_json, true);
+                }
+
+                // Retrieve all available crew members
+                $sql_available_crew = "SELECT EmpNum FROM staffs WHERE Designation = 'Crew Member' AND Booked = 0";
+                $result_available_crew = $conn->query($sql_available_crew);
+
+                if ($result_available_crew->num_rows > 0) {
+                    // Output data of each row
+                    while ($row_available_crew = $result_available_crew->fetch_assoc()) {
+                        $crew_member_id = $row_available_crew['EmpNum'];
+                        $selected = (in_array($crew_member_id, $crew_members_flight)) ? "selected" : "";
+                        echo "<option value='" . $crew_member_id . "' $selected>" . $crew_member_id . "</option>";
+                    }
+                } else {
+                    echo "<option value='' disabled>No available crew members</option>";
+                }
+
+                // Close connection
+                $conn->close();
+                ?>
+            </select><br><br>
+        </div>
+
         <input type="submit" value="Update Flight">
     </form>
 
     <script>
         $(document).ready(function(){
+            // Initialize Select2 for crew members select element
+            $('#crew').select2();
+            
             $('#plane').change(function(){
-                var selectedRating = $(this).find(':selected').data('rating');
-                $.ajax({
-                    type: 'POST',
-                    url: 'get_pilots.php',
-                    data: { rating: selectedRating },
-                    dataType: 'json',
-                    success: function(response){
-                        if(response.length > 0){
+                if ($(this).val() === "") {
+                    $('#pilotsDiv').hide();
+                    $('#crewMembersDiv').hide();
+                } else {
+                    $('#pilotsDiv').show();
+                    $('#crewMembersDiv').show();
+                    var selectedRating = $(this).find(':selected').data('rating');
+                    $.ajax({
+                        type: 'POST',
+                        url: 'get_pilots.php',
+                        data: { rating: selectedRating },
+                        dataType: 'json',
+                        success: function(response){
                             $('#pilot').empty();
-                            $.each(response, function(index, pilot){
-                                $('#pilot').append('<option value="' + pilot.EmpNum + '">' + pilot.EmpNum + '</option>');
-                            });
-                        } else {
-                            $('#pilot').html('<option value="" disabled>* Pilots not found *</option>');
+                            if(response.length > 0){
+                                $.each(response, function(index, pilot){
+                                    $('#pilot').append('<option value="' + pilot.EmpNum + '">' + pilot.EmpNum + '</option>');
+                                });
+                            } else {
+                                $('#pilot').html('<option value="" disabled>* Pilots not found *</option>');
+                            }
+                        },
+                        error: function(xhr, status, error){
+                            console.error(xhr.responseText);
+                            alert('Error occurred while retrieving pilots.');
                         }
-                    },
-                    error: function(xhr, status, error){
-                        console.error(xhr.responseText);
-                        alert('Error occurred while retrieving pilots.');
-                    }
-                });
+                    });
+                }
             });
         });
     </script>

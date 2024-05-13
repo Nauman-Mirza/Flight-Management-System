@@ -10,13 +10,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dep_time = $_POST['dep_time'];
     $planeid = $_POST['plane'];
     $pilotid = $_POST['pilot'];
+    $crewmembers = json_encode($_POST['crew']);
 
     // Database connection parameters
     $servername = "localhost";
     $username = "root";
     $password = "";
     $dbname = "flight_management_system";
-    
+
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -26,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Prepare SQL statement to update flight data
-    $sql = "UPDATE flight SET origin='$origin', dest='$dest', date='$date', arr_time='$arr_time', dep_time='$dep_time', planeid='$planeid', pilotid='$pilotid' WHERE flightnum='$flightnum'";
+    $sql = "UPDATE flight SET origin='$origin', dest='$dest', date='$date', arr_time='$arr_time', dep_time='$dep_time', planeid='$planeid', pilotid='$pilotid', crewmembers='$crewmembers' WHERE flightnum='$flightnum'";
 
     // Execute SQL statement
     if ($conn->query($sql) === TRUE) {
