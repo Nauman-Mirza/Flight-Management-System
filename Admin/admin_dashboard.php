@@ -118,5 +118,9 @@ $conn->close();
     <form action="Flight/all_flight_listing.php" method="post">
         <input type="submit" value="Flights">
     </form>
+    <h3>All Bookings : </h3>
+    <form action="Booking/all_booking_listing.php" method="post">
+        <input type="submit" value="Booking">
+    </form>
 </body>
 </html>
