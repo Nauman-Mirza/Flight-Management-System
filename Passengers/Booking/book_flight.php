@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql = "INSERT INTO bookings (passengerid, flightnum) VALUES ('$passenger_id', '$flight_id')";
 
     if ($conn->query($sql) === TRUE) {
-        echo "Booking successful!";
+        
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
@@ -85,11 +85,152 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Flight</title>
+    <style>
+
+        /* Global styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar styles */
+        .navbar {
+            background-color: #2196F3;
+            overflow: hidden;
+            padding: 10px 0;
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            z-index: 1;
+            top: 60px;
+            left: 0;
+            background-color: #2196F3;
+            padding-top: 20px;
+            margin-top: 10px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 16px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .sidebar a:hover {
+            background-color: #ddd;
+            color: #333;
+        }
+
+        /* Content styles */
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        /* Table styles */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .book-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+
+        /* Toast message styles */
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #4CAF50;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+        }
+
+        .toast.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @-webkit-keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+
+        @-webkit-keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+    </style>
 </head>
 <body>
-    <form action="../dashboard.php" method="post">
-        <input type="submit" value="Back">
-    </form>
+    <div class="navbar">
+        <a href="#">FMS</a>
+        <a href="../logout.php" style="float: right;">Logout</a>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="../dashboard.php">Upcoming Flights</a>
+        <a href="view_bookings.php">Passenger Bookings</a>
+        <a href="../History/view_flight_history.php">Flight History</a>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        
     <h2>Confirm Booking</h2>
     <p>You are about to book the following flight:</p>
     <p><strong>Flight Number:</strong> <?php echo $flightnum; ?></p>
@@ -102,5 +243,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?flightnum=' . $flightnum; ?>" method="post">
         <input type="submit" value="Confirm Booking">
     </form>
+
+    </div>
+
+    <!-- Toast message -->
+    <div id="toast" class="toast">Flight booked successfully!</div>
+
+    <script>
+        // Show toast message
+        function showToast() {
+            var toast = document.getElementById("toast");
+            toast.className = "toast show";
+            setTimeout(function(){
+                toast.className = toast.className.replace("show", ""); 
+            }, 3000);
+        }
+
+        // Check if booking is successful and show toast message
+        <?php if ($_SERVER["REQUEST_METHOD"] == "POST") { ?>
+            showToast();
+        <?php } ?>
+    </script>
 </body>
 </html>
+

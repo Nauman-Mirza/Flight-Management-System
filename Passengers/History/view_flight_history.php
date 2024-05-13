@@ -41,25 +41,107 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flight History</title>
     <style>
+        /* Global styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar styles */
+        .navbar {
+            background-color: #2196F3;
+            overflow: hidden;
+            padding: 10px 0;
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            z-index: 1;
+            top: 60px;
+            left: 0;
+            background-color: #2196F3;
+            padding-top: 20px;
+            margin-top: 10px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 16px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .sidebar a:hover {
+            background-color: #ddd;
+            color: #333;
+        }
+
+        /* Content styles */
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        /* Table styles */
         table {
             border-collapse: collapse;
             width: 100%;
+            margin-top: 20px;
         }
+
         th, td {
             border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
         }
+
         th {
             background-color: #f2f2f2;
+        }
+
+        .book-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 4px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <form action="../dashboard.php" method="post">
-        <input type="submit" value="Back">
-    </form>
-    <h3>Flight History</h3>
+        <!-- Navbar -->
+    <div class="navbar">
+        <a href="#">FMS</a>
+        <a href="../logout.php" style="float: right;">Logout</a>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="../dashboard.php">Upcoming Flights</a>
+        <a href="../Booking/view_bookings.php">Passenger Bookings</a>
+        <a href="view_flight_history.php">Flight History</a>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
     <table>
         <tr>
             <th>Booking ID</th>
@@ -92,5 +174,6 @@ $conn->close();
         }
         ?>
     </table>
+        </div>
 </body>
 </html>
