@@ -355,9 +355,9 @@ select
     <div class="sidebar">
         <a href="../admin_dashboard.php">Upcoming Flights</a>
         <a href="../Booking/all_booking_listing.php">View Bookings</a>
-        <a href="all_flight_listing.php" id='active'>Manage Flights</a> 
+        <a href="../Flight/all_flight_listing.php" >Manage Flights</a> 
         <a href="../Staff/all_staff_listing.php">Manage Staff</a>
-        <a href="../AirPlane/all_plane_listing.php">Manage Airplanes</a>
+        <a href="../AirPlane/all_plane_listing.php" id='active'>Manage Airplanes</a>
     </div>
 
     <div class="content">
