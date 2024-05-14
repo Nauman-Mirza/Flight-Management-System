@@ -36,6 +36,15 @@ $surname = $_SESSION['surname'];
             background-color: #191924;
             overflow: hidden;
             padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: top 0.3s;
+        }
+
+        .navbar.fixed {
+            top: -80px;
         }
 
         .navbar a {
@@ -57,6 +66,7 @@ $surname = $_SESSION['surname'];
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-left: 270px; /* Adjust sidebar width + some extra space */
     margin-right: 20px; /* Adjust as needed */
+    margin-top:100px;
 }
 
 
