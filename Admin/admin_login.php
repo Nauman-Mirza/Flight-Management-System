@@ -36,11 +36,11 @@ if ($result->num_rows > 0) {
         exit();
     } else {
         // Password is incorrect
-        echo "Incorrect password";
+        echo "Invalid credentials";
     }
 } else {
     // User not found
-    echo "Admin not found";
+    echo "Invalid credentials";
 }
 
 // Close connection

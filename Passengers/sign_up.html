@@ -4,29 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
+    <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
-    <h2>Sign Up</h2>
+    <div class="signup-box">
+        <h1>Sign Up</h1>
     <form action="sign_up.php" method="post">
-        <label for="name">Name:</label><br>
+        <label for="name">Name</label><br>
         <input type="text" id="name" name="name" required><br>
         
-        <label for="surname">Surname:</label><br>
+        <label for="surname">Surname</label><br>
         <input type="text" id="surname" name="surname" required><br>
         
-        <label for="email">Email:</label><br>
+        <label for="email">Email</label><br>
         <input type="email" id="email" name="email" required><br>
         
-        <label for="password">Password:</label><br>
+        <label for="password">Password</label><br>
         <input type="password" id="password" name="password" required><br>
         
-        <label for="address">Address:</label><br>
+        <label for="address">Address</label><br>
         <input type="text" id="address" name="address" required><br>
         
-        <label for="phone">Phone Number:</label><br>
+        <label for="phone">Phone Number</label><br>
         <input type="tel" id="phone" name="phone" required><br>
         
         <input type="submit" value="Sign Up">
     </form>
+    <p class="para-2">
+        Already have an account? <a href="login.html">Login here</a>
+    </p>
+    </div>
+    
+
 </body>
 </html>

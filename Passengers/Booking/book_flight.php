@@ -84,19 +84,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Flight</title>
+    <title>Flight Booking - FMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
 
         /* Global styles */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif; /* Use Poppins font */
             margin: 0;
             padding: 0;
         }
 
         /* Navbar styles */
         .navbar {
-            background-color: #2196F3;
+            background-color: #191924;
             overflow: hidden;
             padding: 10px 0;
         }
@@ -117,9 +118,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             width: 250px;
             position: fixed;
             z-index: 1;
-            top: 60px;
+            top: 62px;
             left: 0;
-            background-color: #2196F3;
+            background-color: #090917;
             padding-top: 20px;
             margin-top: 10px;
         }
@@ -139,38 +140,63 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         /* Content styles */
         .content {
-            margin-left: 250px;
-            padding: 20px;
-        }
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-        /* Table styles */
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
+ table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #090917;
+        color: white;
+        font-size:16px;
+    }
+    tr:hover {
+        background-color: #f5f5f5;
+    }
 
-        th, td {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
+h3 {
+    color: #333;
+    text-align: center;
+    font-size: 32px;
+}
+      .confirm-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
 
-        th {
-            background-color: #f2f2f2;
-        }
+.confirm {
+    background-color: #101725;
+    color: white;
+    padding: 10px 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+    width: 200px; /* Optional: Adjust the width as needed */
+}
 
-        .book-btn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 8px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+    .confirm:hover {
+        background-color: #191924;
+    }
 
+    #active {
+            background-color: #ddd;
+            color: #333;
+        }
 
         /* Toast message styles */
         .toast {
@@ -217,34 +243,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="navbar">
-        <a href="#">FMS</a>
+        <a href="#">Flight Management System</a>
         <a href="../logout.php" style="float: right;">Logout</a>
     </div>
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <a href="../dashboard.php">Upcoming Flights</a>
+        <a href="../dashboard.php" id='active'>Upcoming Flights</a>
         <a href="view_bookings.php">Passenger Bookings</a>
         <a href="../History/view_flight_history.php">Flight History</a>
     </div>
 
-    <!-- Content -->
     <div class="content">
-        
-    <h2>Confirm Booking</h2>
-    <p>You are about to book the following flight:</p>
-    <p><strong>Flight Number:</strong> <?php echo $flightnum; ?></p>
-    <p><strong>Origin:</strong> <?php echo $origin; ?></p>
-    <p><strong>Destination:</strong> <?php echo $dest; ?></p>
-    <p><strong>Date:</strong> <?php echo $date; ?></p>
-    <p><strong>Arrival Time:</strong> <?php echo $arr_time; ?></p>
-    <p><strong>Departure Time:</strong> <?php echo $dep_time; ?></p>
+    <h3>Booking Details</h3>
+    <table>
+        <tr>
+            <td><strong>Flight Number</strong></td>
+            <td><?php echo $flightnum; ?></td>
+        </tr>
+        <tr>
+            <td><strong>Origin</strong></td>
+            <td><?php echo $origin; ?></td>
+        </tr>
+        <tr>
+            <td><strong>Destination</strong></td>
+            <td><?php echo $dest; ?></td>
+        </tr>
+        <tr>
+            <td><strong>Date</strong></td>
+            <td><?php echo $date; ?></td>
+        </tr>
+        <tr>
+    <td><strong>Arrival Time</strong></td>
+    <td><?php echo date("g:i a", strtotime($arr_time)); ?></td>
+</tr>
+<tr>
+    <td><strong>Departure Time</strong></td>
+    <td><?php echo date("g:i a", strtotime($dep_time)); ?></td>
+</tr>
+    </table>
 
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?flightnum=' . $flightnum; ?>" method="post">
-        <input type="submit" value="Confirm Booking">
-    </form>
-
+    <div class="confirm-container">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?flightnum=' . $flightnum; ?>" method="post">
+            <input type="submit" value="Confirm Booking" class="confirm">
+        </form>
     </div>
+</div>
 
     <!-- Toast message -->
     <div id="toast" class="toast">Flight booked successfully!</div>

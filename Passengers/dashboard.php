@@ -55,18 +55,20 @@ $result = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Passenger Dashboard</title>
+    <title>Flight Management System</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
     <style>
         /* Global styles */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif; /* Use Poppins font */
             margin: 0;
             padding: 0;
         }
 
         /* Navbar styles */
         .navbar {
-            background-color: #2196F3;
+            background-color: #191924;
+            font-family: 'Poppins', sans-serif;
             overflow: hidden;
             padding: 10px 0;
         }
@@ -87,9 +89,9 @@ $result = $conn->query($sql);
             width: 250px;
             position: fixed;
             z-index: 1;
-            top: 60px;
+            top: 62px;
             left: 0;
-            background-color: #2196F3;
+            background-color: #090917;
             padding-top: 20px;
             margin-top: 10px;
         }
@@ -107,102 +109,145 @@ $result = $conn->query($sql);
             color: #333;
         }
 
+        #active {
+            background-color: #ddd;
+            color: #333;
+        }
+
         /* Content styles */
-        .content {
-            margin-left: 250px;
-            padding: 20px;
-        }
+.content {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-        /* Table styles */
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
+h3 {
+    color: #333;
+    text-align: center;
+    font-size: 32px;
+}
 
-        th, td {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
+form {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+}
 
-        th {
-            background-color: #f2f2f2;
-        }
+input[type="text"] {
+    flex: 2;
+    width: auto;
+    padding: 10px 10px; /* Adjusted padding */
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    font-size:16px;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
 
-        .book-btn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 8px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+input[type="submit"] {
+    background-color: #101725;
+    color: white;
+    padding: 10px 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    flex: 1;
+    height: 40px; /* Set the height */
+}
+
+input[type="submit"]:hover {
+    background-color: #191924;
+}
+
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #090917;
+        color: white;
+        font-size:16px;
+    }
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+    .book-btn {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #101725;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+    .book-btn:hover {
+        background-color: #191924;
+    }
     </style>
 </head>
 <body>
     <!-- Navbar -->
     <div class="navbar">
-        <a href="#">FMS</a>
+        <a href="#">Flight Management System</a>
         <a href="logout.php" style="float: right;">Logout</a>
     </div>
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <a href="dashboard.php">Upcoming Flights</a>
+        <a href="dashboard.php" id='active'>Upcoming Flights</a>
         <a href="Booking/view_bookings.php">Passenger Bookings</a>
         <a href="History/view_flight_history.php">Flight History</a>
     </div>
 
     <!-- Content -->
-    <div class="content">
-        <!-- <h2>Welcome <?php echo $name . ' ' . $surname; ?></h2> -->
-
-        <!-- Search Flights Form -->
-        <h3>Search Flights</h3>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <label for="origin">Origin:</label>
-            <input type="text" id="origin" name="origin" value="<?php echo $origin; ?>">
-            <label for="destination">Destination:</label>
-            <input type="text" id="destination" name="destination" value="<?php echo $destination; ?>">
-            <input type="submit" value="Search">
-        </form>
-
-        <!-- Upcoming Flights -->
-        <h3 id="upcoming">Upcoming Flights - Book Now</h3>
-        <table>
-            <tr>
-                <th>Flight Number</th>
-                <th>Origin</th>
-                <th>Intermediate Location</th>
-                <th>Destination</th>
-                <th>Date</th>
-                <th>Arrival Time</th>
-                <th>Departure Time</th>
-                <th>Action</th>
-            </tr>
-            <?php
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    echo "<tr>";
-                    echo "<td>" . $row['flightnum'] . "</td>";
-                    echo "<td>" . $row['origin'] . "</td>";
-                    echo "<td>" . $row['Intermediate'] . "</td>";
-                    echo "<td>" . $row['dest'] . "</td>";
-                    echo "<td>" . $row['date'] . "</td>";
-                    echo "<td>" . date("h:i A", strtotime($row['arr_time'])) . "</td>";
-                    echo "<td>" . date("h:i A", strtotime($row['dep_time'])) . "</td>";
-                    echo "<td><a href='Booking/book_flight.php?flightnum=" . $row['flightnum'] . "' class='book-btn'>Book Now</a></td>";
-                    echo "</tr>";
-                }
-            } else {
-                echo "<tr><td colspan='7'>No upcoming flights</td></tr>";
+    <<div class="content">
+    <h3>Upcoming Flights</h3>
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <input type="text" id="origin" name="origin" value="<?php echo $origin; ?>" placeholder="Origin">
+        <input type="text" id="destination" name="destination" value="<?php echo $destination; ?>" placeholder="Destination">
+        <input type="submit" value="Search" id='sub'>
+    </form>
+    <table>
+        <tr>
+            <th>Flight Number</th>
+            <th>Origin</th>
+            <th>Intermediate Location</th>
+            <th>Destination</th>
+            <th>Date</th>
+            <th>Arrival Time</th>
+            <th>Departure Time</th>
+            <th></th>
+        </tr>
+        <?php
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo "<tr>";
+                echo "<td>" . $row['flightnum'] . "</td>";
+                echo "<td>" . $row['origin'] . "</td>";
+                echo "<td>" . $row['Intermediate'] . "</td>";
+                echo "<td>" . $row['dest'] . "</td>";
+                echo "<td>" . $row['date'] . "</td>";
+                echo "<td>" . date("h:i A", strtotime($row['arr_time'])) . "</td>";
+                echo "<td>" . date("h:i A", strtotime($row['dep_time'])) . "</td>";
+                echo "<td><a href='Booking/book_flight.php?flightnum=" . $row['flightnum'] . "' class='book-btn'>Book Now</a></td>";
+                echo "</tr>";
             }
-            ?>
-        </table>
-    </div>
+        } else {
+            echo "<tr><td colspan='7'>No upcoming flights</td></tr>";
+        }
+        ?>
+    </table>
+</div>
 </body>
 </html>
 

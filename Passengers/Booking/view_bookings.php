@@ -39,18 +39,19 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Passenger Bookings</title>
+    <title>Your Bookings</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
     <style>
         /* Global styles */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif; /* Use Poppins font */
             margin: 0;
             padding: 0;
         }
 
         /* Navbar styles */
         .navbar {
-            background-color: #2196F3;
+            background-color: #191924;
             overflow: hidden;
             padding: 10px 0;
         }
@@ -71,9 +72,9 @@ $conn->close();
             width: 250px;
             position: fixed;
             z-index: 1;
-            top: 60px;
+            top: 62px;
             left: 0;
-            background-color: #2196F3;
+            background-color: #090917;
             padding-top: 20px;
             margin-top: 10px;
         }
@@ -91,56 +92,108 @@ $conn->close();
             color: #333;
         }
 
+        #active {
+            background-color: #ddd;
+            color: #333;
+        }
+
         /* Content styles */
-        .content {
-            margin-left: 250px;
-            padding: 20px;
-        }
+.content {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-        /* Table styles */
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
+h3 {
+    color: #333;
+    text-align: center;
+    font-size: 32px;
+}
 
-        th, td {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
+form {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+}
 
-        th {
-            background-color: #f2f2f2;
-        }
+input[type="text"] {
+    flex: 2;
+    width: auto;
+    padding: 10px 10px; /* Adjusted padding */
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    font-size:16px;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
 
-        .book-btn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 8px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+input[type="submit"] {
+    background-color: #101725;
+    color: white;
+    padding: 10px 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    flex: 1;
+    height: 40px; /* Set the height */
+}
+
+input[type="submit"]:hover {
+    background-color: #191924;
+}
+
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #090917;
+        color: white;
+        font-size:16px;
+    }
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+    .book-btn {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #101725;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+    .book-btn:hover {
+        background-color: #191924;
+    }
     </style>
 </head>
 <body>
      <div class="navbar">
-        <a href="#">FMS</a>
+        <a href="#">Flight Management System</a>
         <a href="../logout.php" style="float: right;">Logout</a>
     </div>
 
     <!-- Sidebar -->
     <div class="sidebar">
         <a href="../dashboard.php">Upcoming Flights</a>
-        <a href="view_bookings.php">Passenger Bookings</a>
+        <a href="view_bookings.php" id='active'>Passenger Bookings</a>
         <a href="../History/view_flight_history.php">Flight History</a>
     </div>
 
     <!-- Content -->
     <div class="content">
+        <h3>Your Current Bookings</h3>
     <table>
         <tr>
             <th>Booking ID</th>
