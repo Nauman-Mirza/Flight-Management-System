@@ -48,28 +48,168 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Flight Management System</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        /* Global styles */
+        body {
+            font-family: 'Poppins', sans-serif; /* Use Poppins font */
+            margin: 0;
+            padding: 0;
         }
-        th, td {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
+
+        /* Navbar styles */
+        .navbar {
+            background-color: #191924;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            padding: 10px 0;
         }
-        th {
-            background-color: #f2f2f2;
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 18px;
         }
+
+        /* Sidebar styles */
+        .content {
+    max-width: 1300px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-left: 270px; /* Adjust sidebar width + some extra space */
+    margin-right: 20px; /* Adjust as needed */
+}
+
+
+.sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    z-index: 1;
+    top: 62px;
+    left: 0;
+    background-color: #090917;
+    padding-top: 20px;
+    margin-top: 10px;
+    float: left; /* Float the sidebar to the left */
+}
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 16px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .sidebar a:hover {
+            background-color: #ddd;
+            color: #333;
+        }
+
+        #active {
+            background-color: #ddd;
+            color: #333;
+        }
+
+        /* Content styles */
+
+h3 {
+    color: #333;
+    text-align: center;
+    font-size: 32px;
+}
+
+form {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+input[type="text"] {
+    flex: 2;
+    width: auto;
+    padding: 10px 10px; /* Adjusted padding */
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    font-size:16px;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="submit"] {
+    background-color: #101725;
+    color: white;
+    padding: 10px 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    flex: 1;
+    height: 40px; /* Set the height */
+}
+
+input[type="submit"]:hover {
+    background-color: #191924;
+}
+
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #090917;
+        color: white;
+        font-size:16px;
+    }
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+    .book-btn {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #101725;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+    .book-btn:hover {
+        background-color: #191924;
+    }
     </style>
 </head>
 <body>
-    <h2>Welcome Admin <?php echo $name . ' ' . $surname; ?></h2>
-    <form action="logout.php" method="post">
-        <input type="submit" value="Logout">
-    </form>
-    <h3>Upcoming Flights:</h3>
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="#">Flight Management System</a>
+        <a href="logout.php" style="float: right;">Logout</a>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="admin_dashboard.php" id='active'>Upcoming Flights</a>
+        <a href="Booking/all_booking_listing.php">View Bookings</a>
+        <a href="Flight/all_flight_listing.php">Manage Flights</a>
+        <a href="Staff/all_staff_listing.php">Manage Staff</a>
+        <a href="AirPlane/all_plane_listing.php">Manage Airplanes</a>
+    </div>
+
+    <div class="content">
+    <h3>Upcoming Flights</h3>
     <table>
         <tr>
             <th>Flight Number</th>
@@ -91,10 +231,8 @@ $conn->close();
                 echo "<td>" . $row['Intermediate'] . "</td>";
                 echo "<td>" . $row['dest'] . "</td>";
                 echo "<td>" . $row['date'] . "</td>";
-                // Format arrival time
-                $arrivalTime = date("h:i a", strtotime($row['arr_time']));
+                $arrivalTime = date("h:i a", strtotime($row['arr_time'])); // Format arrival time
                 echo "<td>" . $arrivalTime . "</td>";
-                // Format departure time
                 $departureTime = date("h:i a", strtotime($row['dep_time']));
                 echo "<td>" . $departureTime . "</td>";
                 echo "<td>" . $row['planeSerNum'] . " (" . $row['Model'] . ")" . "</td>";
@@ -106,21 +244,7 @@ $conn->close();
         }
         ?>
     </table>
-    <h3>Airplane Feature : </h3>
-    <form action="AirPlane/all_plane_listing.php" method="post">
-        <input type="submit" value="View All Planes">
-    </form>
-    <h3>Staff Feature : </h3>
-    <form action="Staff/all_staff_listing.php" method="post">
-        <input type="submit" value="View All Staff">
-    </form>
-    <h3>Create Flights : </h3>
-    <form action="Flight/all_flight_listing.php" method="post">
-        <input type="submit" value="Flights">
-    </form>
-    <h3>All Bookings : </h3>
-    <form action="Booking/all_booking_listing.php" method="post">
-        <input type="submit" value="Booking">
-    </form>
+ 
+    </div>
 </body>
 </html>

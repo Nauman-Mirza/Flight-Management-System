@@ -113,17 +113,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         /* Sidebar styles */
-        .sidebar {
-            height: 100%;
-            width: 250px;
-            position: fixed;
-            z-index: 1;
-            top: 62px;
-            left: 0;
-            background-color: #090917;
-            padding-top: 20px;
-            margin-top: 10px;
-        }
+        .content {
+    max-width: 1300px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-left: 270px; /* Adjust sidebar width + some extra space */
+    margin-right: 20px; /* Adjust as needed */
+}
+
+
+.sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    z-index: 1;
+    top: 62px;
+    left: 0;
+    background-color: #090917;
+    padding-top: 20px;
+    margin-top: 10px;
+    float: left; /* Float the sidebar to the left */
+}
 
         .sidebar a {
             display: block;
@@ -139,14 +152,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         /* Content styles */
-        .content {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
 
  table {
         width: 100%;
