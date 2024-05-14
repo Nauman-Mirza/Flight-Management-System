@@ -15,7 +15,7 @@
             margin: 0;
             padding: 0;
         }
-
+    
         /* Navbar styles */
         .navbar {
             background-color: #191924;
@@ -71,27 +71,6 @@
             color: #333;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #090917;
-            color: white;
-            font-size: 16px;
-        }
-
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-
         h2 {
             color: #333;
             text-align: center;
@@ -104,21 +83,10 @@
             margin-top: 30px;
         }
 
-        .confirm {
-            background-color: #101725;
-            color: white;
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: semi-bold;
-            font-family: 'Poppins', sans-serif;
-            text-decoration: none;
-            margin-right: 10px;
-        }
         .addbtn {
             background-color: #101725;
             color: white;
+            width: 30%;
             padding: 12px 16px;
             border: none;
             border-radius: 4px;
@@ -129,7 +97,7 @@
             margin-right: 10px;
         }
 
-        .confirm:hover {
+        .addbtn:hover {
             background-color: #191924;
         }
 
@@ -182,6 +150,7 @@
 
         .goback-btn {
     background-color: white;
+    color: #101725;
     border: none;
     cursor: pointer;
     margin-bottom: 20px; /* Adjust margin as needed */
@@ -193,6 +162,89 @@
     width: 40px;
     height: 40px;
 }
+
+/* Form container styles */
+/* Form container styles */
+.form-container {
+    max-width: 800px; /* Increased max-width for better alignment */
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f2f2f2;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form section styles */
+.b1,
+.b2,
+.b3,
+.b4,
+.b6 {
+    margin-bottom: 20px;
+}
+
+.b2,
+.b3 {
+    display: flex;
+    justify-content: space-between; /* Align elements evenly */
+}
+
+label {
+    font-weight: bold;
+}
+
+/* Form section item styles */
+.b1 label,
+.b2 label,
+.b3 label,
+.b4 label,
+.b5 label,
+.b6 label {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.b1 {
+    width: 30%;
+}
+
+.b4,
+.b5 { /* Adjust width and display property for better alignment */
+    width: 47.5%; /* Equal width for both elements */
+    display: flex;
+}
+
+.b5{
+    width: 100%;
+}
+
+.b4 select,
+.b5 select {
+    width: calc(100% - 10px); /* Adjust width to fit inside container */
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.b1 input[type="text"],
+.b2 input[type="text"],
+.b3 input[type="date"],
+.b3 input[type="time"],
+.b4 select,
+.b5 select,
+.b6 select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
     </style>
 </head>
 <body>
@@ -216,28 +268,27 @@
 </form>
     <h2>Enter Flight Details</h2>
     <form action="store_flight.php" method="post" id="flightForm">
-        <label for="flightnum">Flight Number:</label><br>
+        <div class='form-container'>
+            <div class='b1'>
+        <label for="flightnum">Flight No</label><br>
         <input type="text" id="flightnum" name="flightnum" required><br>
+        </div>
+        <label for="date">Flight Location</label><br>
+        <div class='b2'>
         
-        <label for="origin">Origin:</label><br>
-        <input type="text" id="origin" name="origin" required><br>
-        
-        <label for="dest">Intermediate Location:</label><br>
-        <input type="text" id="inter_loc" name="inter_loc"><br>
-
-        <label for="dest">Destination:</label><br>
-        <input type="text" id="dest" name="dest" required><br>
-        
-        <label for="date">Date:</label><br>
+        <input type="text" id="origin" name="origin" placeholder="Origin" required ><br>
+        <input type="text" id="inter_loc" name="inter_loc" placeholder="Intermediate Location"><br>
+        <input type="text" id="dest" name="dest" placeholder="Destination" required><br>
+</div>
+<label for="date">Flight Date & Timings</label><br>
+        <div class='b3'>
         <input type="date" id="date" name="date" required><br>
-        
-        <label for="arr_time">Arrival Time:</label><br>
         <input type="time" id="arr_time" name="arr_time" required><br>
-        
-        <label for="dep_time">Departure Time:</label><br>
         <input type="time" id="dep_time" name="dep_time" required><br>
-
-        <label for="plane">Select Plane:</label><br>
+</div>
+<label for="plane">Select Plane & Pilots</label><br>
+        <div class='b4'>
+        
         <select id="plane" name="plane" required>
             <?php
             $servername = "localhost";
@@ -270,15 +321,16 @@
             // Close connection
             $conn->close();
             ?>
-        </select><br>
-
-        <div id="pilotsDiv" style="display: none;">
-            <label for="pilot">Select Pilot:</label><br>
+        </select>
+        <div id="pilotsDiv" class='b5' style="display: none;">
             <select id="pilot" name="pilot" required></select><br><br>
         </div>
+        </div>
 
-        <div id="crewMembersDiv">
-    <label for="crew">Select Crew Members:</label><br>
+        
+
+        <div id="crewMembersDiv" class='b6'>
+    <label for="crew">Select Crew Members</label><br>
     <select id="crew" name="crew[]" multiple required>
         <?php
         // Database connection
@@ -307,10 +359,16 @@
         ?>
     </select><br><br>
 </div>
-        <input type="submit" value="Add Flight">
+        <div style="text-align: center;">
+    <input type="submit" value="Add Flight" class='addbtn'>
+</div>
+    </div>
     </form>
 
         </div>
+        </div>
+
+    <div class="toast" id="toastMessage">Flight added successfully!</div>
 
     <script>
     $(document).ready(function(){
@@ -360,6 +418,12 @@
             } else if (selectedDate === new Date().setHours(0,0,0,0) && selectedTime < currentDateTime) {
                 alert('Please select a departure time later than the current time.');
                 e.preventDefault();
+            } else {
+                // Show toast message
+                $('.toast').addClass('show');
+                setTimeout(function(){
+                    $('.toast').removeClass('show');
+                }, 3000);
             }
         });
     });
